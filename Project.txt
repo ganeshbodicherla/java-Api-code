@@ -1,0 +1,45 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class ApiResponseProcessor {
+    public static void main(String[] args) {
+
+        String apiOutput = """
+            {Context=Testimonial..., Header=CARD Header1, Title=Title of Program}
+            {Context=Testimonial..., Header=CARD Header2, Title=Title of Program}
+            {Context=Testimonial..., Header=CARD Header3, Title=Title of Program}
+            """;
+
+
+        String[] entries = apiOutput.split("\\n");
+
+        List<Map<String, String>> parsedData = new ArrayList<>();
+
+
+        for (String entry : entries) {
+      
+            entry = entry.replace("{", "").replace("}", "");
+            String[] fields = entry.split(",\\s*");
+
+            Map<String, String> dataMap = new HashMap<>();
+
+            for (String field : fields) {
+            
+                String[] keyValue = field.split("=");
+                if (keyValue.length == 2) {
+                    dataMap.put(keyValue[0].trim(), keyValue[1].trim());
+                }
+            }
+            parsedData.add(dataMap);
+        }
+
+        for (Map<String, String> data : parsedData) {
+            System.out.println("Header: " + data.get("Header"));
+            System.out.println("Title: " + data.get("Title"));
+            System.out.println("Context: " + data.get("Context"));
+            System.out.println("  ");
+        }
+    }
+}
